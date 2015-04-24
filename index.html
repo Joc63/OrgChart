@@ -1,0 +1,102 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Foxconn Org Chart</title>
+    <link rel="stylesheet" href="js/jquery/ui-lightness/jquery-ui-1.10.2.custom.css" />
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-ui-1.10.2.custom.min.js"></script>
+    <script  type="text/javascript" src="js/primitives.min.js?219"></script>
+    <link href="css/primitives.latest.css?219" media="screen" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/bporgeditor.min.js?2020"></script>
+    <script type='text/javascript'>//<![CDATA[ 
+        $(window).load(function () {
+            var chartDiv = $("#basicdiagram"),
+                viewButton = $("#view"),
+                editorButton = $("#editor"),
+                saveButton = $("#save"),
+                editor = new primitives.orgeditor.Config();
+            
+            editor.editMode = true; 
+            editor.onSave = function () {
+                chartDiv.bpOrgEditor("option");
+            }; 
+
+            $.getJSON("data.json", function(data) {
+                editor.items = data;
+                editorInstance = chartDiv.bpOrgEditor(editor);
+                $('div[name=json-button]').css("display","none");
+                $('input[name=search]').css({
+                    "margin-right":"60px",
+                    "height":"35px",
+                    "width": "200px"
+                });
+
+                viewButton.click(function(){
+                    console.log('loading view...');
+                    editorInstance.bpOrgEditor("option", {editMode:false});
+                    editorInstance.bpOrgEditor("update");
+                });            
+
+                editorButton.click(function(){
+                    console.log('loading editor...');
+                    editorInstance.bpOrgEditor("option", {editMode:true});
+                    editorInstance.bpOrgEditor("update");
+                });  
+            });
+
+            saveButton.click(function(){
+                console.log("saving org chart...");
+                console.log(JSON.stringify(editor.items));
+            });
+        });//]]>  
+
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Foxconn Org Chart</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" placeholder="Email" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-success">Sign in</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+    <div class="jumbotron">
+      <div class="container">
+        <h3>Options</h3>
+        <!--<button id="view">view</button>
+        <button id="editor">editor</button>
+        <button id="save">save</button>
+        -->
+        <a class="btn btn-primary" href="#" id="view" role="button">View</a>
+        <a class="btn btn-primary" href="#" id="editor" role="button">Editor</a>
+        <a class="btn btn-primary" href="#" id="save" role="button">Save</a>
+      </div>
+    </div>
+     <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div id="basicdiagram" class="col-md-10" style="height: 600px;" />
+      </div>
+    </div> <!-- /container -->
+    
+</body>
+</html>
